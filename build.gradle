@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.springframework.org/release"
+    }
+    mavenLocal()
+}
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-xml')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('mysql:mysql-connector-java')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('io.jsonwebtoken:jjwt:0.9.0')
+    implementation('org.springframework.boot:spring-boot-starter-tomcat')
+    implementation('org.modelmapper:modelmapper:2.0.0')
+    implementation('com.amazonaws:aws-java-sdk-ses:1.11.362')
+    implementation('org.springframework.boot:spring-boot-starter-hateoas')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.junit.jupiter:junit-jupiter-engine')
+    implementation('io.springfox:springfox-swagger2:2.9.2')
+    implementation('io.springfox:springfox-swagger-ui:2.9.2')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
