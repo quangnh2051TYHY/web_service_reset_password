@@ -5,3 +5,8 @@ amazon-linux-extras install epel -y   ==> installing epel -release
 
 systemctl enable --now mysqld
 systemctl status mysqld   ==> check status of mysqld.service
+
+grep 'temporary password' /var/log/mysqld.log    generate temporaty root password for mysql
+
+mysql_secure_installation    ==> enter temporary password to login
+
