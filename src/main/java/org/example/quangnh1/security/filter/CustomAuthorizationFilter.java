@@ -1,6 +1,9 @@
 package org.example.quangnh1.security.filter;
 
 import io.jsonwebtoken.Jwts;
+import org.example.quangnh1.entity.User;
+import org.example.quangnh1.repository.UserRepository;
+import org.example.quangnh1.security.CustomUserPrinciple;
 import org.example.quangnh1.security.constant.SecurityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +20,10 @@ import java.util.ArrayList;
 
 
 public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
-
-    public CustomAuthorizationFilter(AuthenticationManager authenticationManager) {
+    private UserRepository userRepository;
+    public CustomAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,7 +50,9 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
                     .getBody()
                     .getSubject();
             if( user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                User existed = userRepository.findByEmail(user);
+                CustomUserPrinciple customUserPrinciple = new CustomUserPrinciple(existed);
+                return new UsernamePasswordAuthenticationToken(user, null, customUserPrinciple.getAuthorities());
             }
             return null;
         }

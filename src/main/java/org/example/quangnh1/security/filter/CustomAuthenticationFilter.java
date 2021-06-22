@@ -3,7 +3,9 @@ package org.example.quangnh1.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.example.quangnh1.SpringApplicationContext;
 import org.example.quangnh1.model.request.UserLoginRequestModel;
+import org.example.quangnh1.security.CustomUserPrinciple;
 import org.example.quangnh1.security.constant.SecurityConstant;
 import org.example.quangnh1.service.UserService;
 import org.example.quangnh1.shared.UserDto;
@@ -47,25 +49,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String userName = ((User) authResult.getPrincipal()).getUsername();
+        //email
+        String userName = ((CustomUserPrinciple) authResult.getPrincipal()).getUsername();
         String token = Jwts.builder()
                 .setSubject(userName)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstant.TOKEN_SECRET)
                 .compact();
-//        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
-//        UserDto userDto = userService.getUser(userName);
-//
-//        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-//        res.addHeader("UserID", userDto.getUserId());
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
 
         response.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
+        response.addHeader("UserID", userDto.getUserId());
+
+//        response.addHeader(SecurityConstant.HEADER_STRING, SecurityConstant.TOKEN_PREFIX + token);
     }
 }
 

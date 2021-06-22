@@ -3,6 +3,7 @@ package org.example.quangnh1.controller;
 import org.example.quangnh1.exception.UserServiceException;
 import org.example.quangnh1.model.request.UserDetailRequestModel;
 import org.example.quangnh1.model.response.MessageConstant;
+import org.example.quangnh1.model.response.ServiceResult;
 import org.example.quangnh1.model.response.UserRest;
 import org.example.quangnh1.service.UserService;
 import org.example.quangnh1.shared.UserDto;
@@ -66,8 +67,8 @@ public class UserController {
         return userService.updateUser(id, userDetail);
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete was called";
+    @DeleteMapping("/delete-by-id/{id}")
+    public ServiceResult deleteUser(@PathVariable String id) {
+        return userService.deleteUserById(id);
     }
 }
